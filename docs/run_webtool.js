@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stepp Lab Intelligibility Assessment Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      margin: 20px;
+      background-color: #fff;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #222;
+      font-size: 1.5em; /* Adjust for responsiveness */
+    }
+
+    .metadata {
+      text-align: center;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 100%; /* Make form responsive */
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group .slider-container {
+      position: relative;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .form-group .slider-container input[type="range"] {
+      width: 100%;
+    }
+
+    .form-group .slider-container .slider-label {
+      position: absolute;
+      top: -30px; /* Position label above the slider */
+      left: 50%;
+      transform: translateX(-50%);
+      background: #007bff;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #results {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      max-width: 100%; /* Make results section responsive */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .result-title {
+      font-weight: bold;
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .citation {
+      font-size: 12px;
+      color: #555;
+      margin-top: 20px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 600px) {
+      body {
+        margin: 10px;
+      }
+
+      h1 {
+        font-size: 1.2em; /* Smaller font size for smaller screens */
+      }
+
+      .metadata, .citation {
+        font-size: 10px;
+      }
+
+      .form-group label {
+        font-size: 14px;
+      }
+
+      .form-group .slider-container .slider-label {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+
+      select, input[type="range"] {
+        padding: 6px;
+      }
+
+      button {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      .result-title {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Stepp Lab Intelligibility Assessment Tool</h1>
+
+  <form id="criteriaForm">
+    <div class="form-group">
+      <label for="assessmentMethod">Assessment Method:</label>
+      <select id="assessmentMethod" name="assessmentMethod">
+        <option value="orthographic transcription">Orthographic Transcription</option>
+        <option value="VAS">Visual Analog Scale</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="listenerType">Listener Type:</label>
+      <select id="listenerType" name="listenerType">
+        <option value="SLPs">SLPs</option>
+        <option value="inexperienced">Inexperienced</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="accuracyLevel">Accuracy Level:</label>
+      <div class="slider-container">
+        <input type="range" id="accuracyLevel" name="accuracyLevel" min="0" max="100" step="1" value="50" oninput="updateAccuracyLabel()">
+        <div class="slider-label" id="accuracyLabel">50%</div>
+      </div>
+    </div>
+
+    <button type="button" onclick="findResults()">Find Results</button>
+  </form>
+
+  <div id="results">
+    <div class="result-title" id="resultTitle"></div>
+    <table id="resultTable">
+      <!-- Table content will be inserted here -->
+    </table>
+  </div>
+
+  <div class="metadata">
+    <p>Last Updated: August 28, 2024 | Version: 1.0</p>
+  </div>
+
+  <div class="citation">
+    <p><b>Citation: </b> Dahl, K.L., Balz, M.A., Díaz Cádiz, M., & Stepp, C.E. (<i>In Press</i>). How to efficiently measure the intelligibility of people with Parkinson’s disease. <i>American Journal of Speech-Language Pathology</i>.</p>
+  </div>
+
+  <script>
+    const baseURL = 'https://raw.githubusercontent.com/SteppLab/listener_calculator/main/';
+
+    const fileIdMap = {
+      orthographic_transcription_inexperienced: 'orthographic_transcription_inexperienced.JSON',
+      orthographic_transcription_SLPs: 'orthographic_transcription_SLPs.JSON',
+      VAS_inexperienced: 'VAS_inexperienced.JSON',
+      VAS_SLPs: 'VAS_SLPs.JSON'
+    };
+
+    function getFileURL(method, listenerType) {
+      const fileId = fileIdMap[`${method.replace(/ /g, '_')}_${listenerType.replace(/ /g, '_')}`];
+      return `${baseURL}${fileId}`;
+    }
+
+    async function fetchLookupData(url) {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching lookup data:', error);
+        return {};
+      }
+    }
+
+    function findClosest(value, array) {
+      return array.reduce((prev, curr) => 
+        Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+      );
+    }
+
+    async function findResults() {
+      const form = document.getElementById('criteriaForm');
+      const method = form.assessmentMethod.value.replace(/ /g, '_');
+      const listenerType = form.listenerType.value.replace(/ /g, '_');
+      const accuracy = parseInt(form.accuracyLevel.value, 10); 
+      
+      const fileURL = getFileURL(method, listenerType);
+      const data = await fetchLookupData(fileURL);
+
+      if (!data.sentences || !data.listeners || !data.accuracy) {
+        console.error('Invalid data format');
+        return;
+      }
+
+      const sentenceValues = data.sentences;
+      const listenerValues = data.listeners;
+      const accuracyData = data.accuracy;
+
+      let results = [];
+
+      for (const sentence of sentenceValues) {
+        for (const listener of listenerValues) {
+          const currentAccuracy = accuracyData[sentence]?.[listener];
+          if (currentAccuracy !== undefined) {
+            const accuracyDiff = Math.abs(currentAccuracy - accuracy);
+            results.push({ sentences: sentence, listeners: listener, accuracy: currentAccuracy, diff: accuracyDiff });
+          }
+        }
+      }
+
+      results.sort((a, b) => a.diff - b.diff || a.accuracy - b.accuracy);
+
+      displayResults(results.slice(0, 3));
+    }
+
+    function displayResults(results) {
+      const resultTitle = document.getElementById('resultTitle');
+      const resultTable = document.getElementById('resultTable');
+
+      resultTitle.textContent = "Recommended # of Listeners and Sentences";
+      console.log(resultTable);
+      if (results.length > 0) {
+        resultTable.innerHTML = `
+          <tr>
+            <th>Sentences</th>
+            <th>Listeners</th>
+            <th>Accuracy</th>
+          </tr>
+          ${results.map(result => `
+            <tr>
+              <td>${result.sentences}</td>
+              <td>${result.listeners}</td>
+              <td>${result.accuracy}%</td>
+            </tr>
+          `).join('')}
+        `;
+      } else {
+        resultTable.innerHTML = '<tr><td colspan="3">No matching results found.</td></tr>';
+      }
+    }
+
+    function updateAccuracyLabel() {
+      const slider = document.getElementById('accuracyLevel');
+      const label = document.getElementById('accuracyLabel');
+      const value = slider.value;
+      label.textContent = `${value}%`;
+      const sliderWidth = slider.offsetWidth;
+      const labelWidth = label.offsetWidth;
+      const offset = (sliderWidth / 100) * value - (labelWidth / 2);
+      label.style.left = `${offset}px`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateAccuracyLabel();
+    });
+  </script>
+</body>
+</html>
