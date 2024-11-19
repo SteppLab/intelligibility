@@ -223,7 +223,7 @@
         }
     
         .form-group .slider-container input[type="range"]::-moz-range-track {
-            background: #fff;
+            background: #7474BA;
             height: 8px;
             border-radius: 5px;
         }
@@ -394,8 +394,10 @@
             `)
             .join('');
     
-	  document.getElementById('columnMessage').style.display = 'block';
+	  
           resultTable.innerHTML = headers + rows;
+	  document.getElementById('columnMessage').style.display = 'block';
+
           } else {
             resultTable.innerHTML = '<tr><td colspan="3">No matching results found.</td></tr>';
           }
