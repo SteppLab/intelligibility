@@ -202,12 +202,12 @@
             -webkit-appearance: none;
             appearance: none;
             height: 8px;
-            background: #fff;
+            background: #A9EC21;
             border-radius: 5px;
         }
     
         .form-group .slider-container input[type="range"]::-webkit-slider-runnable-track {
-            background: #7474BA;
+            background: #fff;
             height: 8px;
             border-radius: 5px;
         }
@@ -217,13 +217,13 @@
             appearance: none;
             width: 20px;
             height: 20px;
-            background: #7474BA;
+            background: #fff;
             border-radius: 50%;
             cursor: pointer;
         }
     
         .form-group .slider-container input[type="range"]::-moz-range-track {
-            background: #7474BA;
+            background: #fff;
             height: 8px;
             border-radius: 5px;
         }
@@ -231,7 +231,7 @@
         .form-group .slider-container input[type="range"]::-moz-range-thumb {
             width: 20px;
             height: 20px;
-            background: #7474BA;
+            background: #fff;
             border-radius: 50%;
             cursor: pointer;
         }
@@ -239,6 +239,10 @@
         .form-group .slider-container input[type="range"]:focus {
             outline: none;
         }
+
+	#columnMessage {
+	    display: none;
+	}
     </style>
 </head>
 <body>
@@ -360,8 +364,10 @@
     
           if (results.length > 0) {
             displayResults(results);
+	    document.getElementById('columnMessage').style.display = 'block';
           } else {
             document.getElementById('resultTable').innerHTML = '<tr><td colspan="3">No matching results found.</td></tr>';
+	    document.getElementById('columnMessage').style.display = 'none';
           }
         }
     
@@ -396,7 +402,6 @@
     
 	  
           resultTable.innerHTML = headers + rows;
-	  document.getElementById('columnMessage').style.display = 'block';
 
           } else {
             resultTable.innerHTML = '<tr><td colspan="3">No matching results found.</td></tr>';
@@ -479,6 +484,7 @@
     
         document.addEventListener('DOMContentLoaded', () => {
           updateAccuracyLabel();
+          document.getElementById('columnMessage').style.display = 'none';
         });
     </script>
 </div>
