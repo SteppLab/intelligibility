@@ -278,7 +278,7 @@
 
     <div id="results">
         <div class="result-title" id="resultTitle"></div>
-<p style="font-size: 12px; text-align: center; color: #555;">Click on a table header to sort by that column.</p>
+<p style="font-size: 12px; text-align: center; color: #555;" id="columnMessage" style="display: none;">Click on a table header to sort by that column.</p>
         <div class="scrollable-results">
             <table id="resultTable">
                 <!-- Table content will be inserted here -->
@@ -394,6 +394,7 @@
             `)
             .join('');
     
+	  document.getElementById('columnMessage').style.display = 'block';
           resultTable.innerHTML = headers + rows;
           } else {
             resultTable.innerHTML = '<tr><td colspan="3">No matching results found.</td></tr>';
