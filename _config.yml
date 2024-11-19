@@ -1,74 +1,110 @@
-# Where things are
-source              : .
-destination         : ./_site
-collections_dir     : .
-plugins_dir         : _plugins # takes an array of strings and loads plugins in that order
-layouts_dir         : _layouts
-data_dir            : _data
-includes_dir        : _includes
-sass:
-  sass_dir: _sass
-collections:
-  posts:
-    output          : true
+title: Stepp Lab Calculator for Assessing Intelligibility
 
-# Handling Reading
-safe                : false
-include             : [".htaccess"]
-exclude             : ["Gemfile", "Gemfile.lock", "node_modules", "vendor/bundle/", "vendor/cache/", "vendor/gems/", "vendor/ruby/"]
-keep_files          : [".git", ".svn"]
-encoding            : "utf-8"
-markdown_ext        : "markdown,mkdown,mkdn,mkd,md"
-strict_front_matter : false
+navbar-links:
+  Tool for Intelligibility Assessment: "index"
+  Stepp Lab Homepage: "https://stepplab.com"
 
-# Filtering Content
-show_drafts         : null
-limit_posts         : 0
-future              : false
-unpublished         : false
+avatar: "/assets/logo.png"
+round-avatar: false
+#title-img: "/assests/logo.png"
 
-# Plugins
-whitelist           : []
-plugins             : []
+social-network-links:
+  email: "stepplab@gmail.com"
+  facebook: stepplab
+  github: stepplab
+  twitter: stepplab
+  youtube: "@stepplab"
+  linkedin: stepplab
+  instagram: stepplab
 
-# Conversion
-markdown            : kramdown
-highlighter         : rouge
-lsi                 : false
-excerpt_separator   : "\n\n"
-incremental         : false
+share-links-active:
+  email: true
+  facebook: true
+  github: true
+  twitter: true
+  youtube: true
+  linkedin: true
+  instagram: true
 
-# Serving
-detach              : false
-port                : 4000
-host                : 127.0.0.1
-baseurl             : "" # does not include hostname
-show_dir_listing    : false
+# title-on-all-pages: true
+# excerpt_length: 50
+# feed_show_excerpt: true
+# feed_show_tags: true
+# post_search: true
+# edit_page_button: true
+# navbar-var-length: false
 
-# Outputting
-permalink           : date
-paginate_path       : /page:num
-timezone            : null
+# page-col: "#FFFFFF"
+# text-col: "#404040"
+# link-col: "#008AFF"
+# hover-col: "#0085A1"
+# navbar-col: "#EAEAEA"
+# navbar-text-col: "#404040"
+# navbar-border-col: "#DDDDDD"
+# footer-col: "#EAEAEA"
+# footer-text-col: "#777777"
+# footer-link-col: "#404040"
+# footer-hover-col: "#0085A1"
 
-quiet               : false
-verbose             : false
-defaults            : []
+# Alternatively, the navbar, footer, and page background can be set to an image
+# instead of colour
 
-liquid:
-  error_mode        : warn
-  strict_filters    : false
-  strict_variables  : false
+#navbar-img: "/assets/img/bgimage.png"
+#footer-img: "/assets/img/bgimage.png"
+#page-img: "/assets/img/bgimage.png"
 
-# Markdown Processors
+# Suggest a colour for mobile browsers to use as the browser's theme. This is only supported by a few mobile browsers.
+#mobile-theme-col: "#0085A1"
+
+# For any extra visual customization, you can include additional CSS files in every page on your site. List any custom CSS files here
+#site-css:
+#  - "/assets/css/custom-styles.css"
+
+# If you have common JavaScript files that should be included in every page, list them here
+#site-js:
+#  - "/assets/js/custom-script.js"
+
+gtag: "G-2YPGH9Y63J"
+date_format: "%B %-d, %Y"
+timezone: "America/Toronto"
+markdown: kramdown
+highlighter: rouge
+permalink: /:year-:month-:day-:title/
+paginate: 5
+
 kramdown:
-  auto_ids          : true
-  entity_output     : as_char
-  toc_levels        : [1, 2, 3, 4, 5, 6]
-  smart_quotes      : lsquo,rsquo,ldquo,rdquo
-  input             : GFM
-  hard_wrap         : false
-  footnote_nr       : 1
-  show_warnings     : false
+  input: GFM
 
-# Theme
-theme               : jekyll-theme-cayman
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+      social-share: true
+  -
+    scope:
+      path: ""
+    values:
+      layout: "page"
+
+exclude:
+  - CHANGELOG.md
+  - CNAME
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
+  - README.md
+  - screenshot.png
+  - docs/
+
+remote_theme: pages-themes/cayman@v0.2.0
+
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-remote-theme
+
+
